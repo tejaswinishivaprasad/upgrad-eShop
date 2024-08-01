@@ -1,0 +1,48 @@
+
+
+.navBarWrapper {
+    flex-grow: 1;
+  }
+  
+  .menuButton {
+    margin-right: 8px; /
+  }
+  
+  .title {
+    flex-grow: 1;
+  }
+  
+  .search {
+    position: relative;
+    border-radius: 4px; 
+    background-color: white; 
+    margin-right: 8px; 
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .searchIcon {
+    padding: 0 16px; 
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .inputRoot {
+    color: inherit;
+  }
+  
+  .inputInput {
+    padding: 8px 8px 8px 0; 
+    padding-left: calc(1em + 32px); 
+    transition: width 0.2s; 
+    width: 100%;
+  }
+  
+  .inputInput.md {
+    width: 20ch;
+  }
+  
