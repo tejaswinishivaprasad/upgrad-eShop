@@ -1,0 +1,78 @@
+/* General container style */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    width: 100%;
+    max-width: 400px; /* Adjust width as needed */
+    margin: auto;
+    box-shadow: none; /* Removed box shadow */
+}
+
+/* Icon style */
+.icon-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.icon {
+    display: inline-block;
+    border-radius: 60px;
+    padding: 0.6em;
+    color: #ffffff;
+    background-color: #f50057;
+}
+
+/* Typography style */
+.title {
+    display: flex;
+    justify-content: center;
+    font-size: 25px;;
+}
+
+/* Input field container style */
+.input-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top:30px;
+    width: 130%;
+}
+
+/* Space between input fields */
+.input-container > *:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+/* Focus state for text fields */
+.text-field {
+    &:focus {
+        border-color: #e3f2fd;
+        box-shadow: 0 0 0 2px #e3f2fd; /* Very pale blue */
+    }
+}
+
+/* Button style */
+.sign-in-button {
+    background-color: #3f51b5; /* Sign In button color */
+    color: #ffffff;
+    margin-top: 1em;
+    width: 100%;
+}
+
+/* Link style */
+.signup-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    width: 100%;
+}
+
+.signup-text {
+    color: #000000; /* Text color */
+    text-align: left; /* Center align text within the container */
+    display: inline-block;
+    width: auto; /* Ensure text width adjusts based on content */
+}
