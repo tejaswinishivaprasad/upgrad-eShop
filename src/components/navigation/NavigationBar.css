@@ -1,48 +1,45 @@
-
-
-.navBarWrapper {
-    flex-grow: 1;
-  }
-  
-  .menuButton {
-    margin-right: 8px; /
-  }
-  
-  .title {
-    flex-grow: 1;
-  }
-  
-  .search {
-    position: relative;
-    border-radius: 4px; 
-    background-color: white; 
-    margin-right: 8px; 
-    margin-left: 0;
+.headerLinks{
     width: 100%;
-  }
-  
-  .searchIcon {
-    padding: 0 16px; 
-    height: 100%;
-    position: absolute;
-    pointer-events: none;
+    text-align: end;
+}
+.headerLinks > a{
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+}
+.logout{
+    background-color: rgb(209, 40, 40) !important;
+    padding: 8px 15px !important;
+    margin: auto 10px !important;
+}
+.registerForm{
+    width:450px ;
+    margin: 80px auto;
+    display: flex;
+    flex-direction: column;
+    
+}
+.registerForm .MuiFormControl-root{
+   margin: 10px 0;
+}
+.registerForm span{
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .inputRoot {
-    color: inherit;
-  }
-  
-  .inputInput {
-    padding: 8px 8px 8px 0; 
-    padding-left: calc(1em + 32px); 
-    transition: width 0.2s; 
-    width: 100%;
-  }
-  
-  .inputInput.md {
-    width: 20ch;
-  }
-  
+    margin: auto;
+}
+.loginBtn{
+    width: 450px;
+    height: 40px;
+    margin-top: 25px;
+    background-color: #3f51b5;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+
+}

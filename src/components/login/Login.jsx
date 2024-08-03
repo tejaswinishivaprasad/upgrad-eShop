@@ -1,143 +1,142 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Box, Typography, TextField, Button, Backdrop, CircularProgress } from '@mui/material';
+import { useState } from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Link, Navigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
-import './Login.css'; // Import the CSS file
+import { successMsg, errorMsg } from '../broadcastMessages/BroadcastMessages';
+import { login } from '../../common/services/apiService';
+import { TextField, Box, Typography } from '@mui/material';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 const Login = () => {
-    const [fields, setFields] = useState({
-        email: { value: '', error: '' },
-        password: { value: '', error: '' }
-    });
-    const [loading, setLoading] = useState(false);
-    const { AuthCtx } = useAuth();
-    const { login, currentUser } = useContext(AuthCtx);
+  const navigate = useNavigate();
+  const [loginData, setLoginData] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
 
-    useEffect(() => {
-        if (currentUser) {
-            console.log("its succ login");
-            <Navigate to="/home" />
-        }
-    }, [currentUser]);
+  const validateFields = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
-    const handleFieldChange = (field, value) => {
-        setFields({
-            ...fields,
-            [field]: { value, error: '' }
-        });
+    const newErrors = {
+      username: "",
+      password: "",
     };
 
-    const validateFields = () => {
-        let isValid = true;
-        const newFields = { ...fields };
+    if (!loginData.username.trim()) {
+      newErrors.username = "Email is required";
+    } else if (!emailRegex.test(loginData.username)) {
+      newErrors.username = "Invalid email address";
+    }
 
-        // Email validation
-        if (!fields.email.value) {
-            newFields.email.error = 'Email is required.';
-            isValid = false;
-        } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(fields.email.value)) {
-            newFields.email.error = 'Please enter a valid email.';
-            isValid = false;
-        }
+    if (!loginData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (!passwordRegex.test(loginData.password)) {
+      newErrors.password = "Password must be at least 6 characters and include uppercase, lowercase, a number, and a special character.";
+    }
 
-        // Password validation
-        if (!fields.password.value) {
-            newFields.password.error = 'Password is required.';
-            isValid = false;
-        } else if (fields.password.value.length < 6) {
-            newFields.password.error = 'Password must be at least 6 characters.';
-            isValid = false;
-        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(fields.password.value)) {
-            newFields.password.error = 'Password must contain upper, lower case letters, numbers, and special characters.';
-            isValid = false;
-        }
+    setErrors(newErrors);
 
-        setFields(newFields);
-        return isValid;
-    };
+    return !newErrors.username && !newErrors.password;
+  };
 
-    const handleLogin = (event) => {
-        event.preventDefault(); // Prevent the default form submission
-        if (validateFields()) {
-            setLoading(true);
-            login(fields.email.value, fields.password.value)
-                .then(() => {
-                    setLoading(false);
-                })
-                .catch(error => {
-                    setLoading(false);
-                    // Handle login error (e.g., show error message)
-                });
-        }
-    };
+  // Function to handle sign-in logic
+  const signIn = async () => {
+    if (!validateFields()) {
+      return;
+    }
 
-    return !currentUser ? (
-        <Box className="login-container">
-            <form onSubmit={handleLogin}>
-                <div className="icon-container">
-                    <LockOutlinedIcon className="icon" />
-                </div>
-                <div className="title">
-                    <Typography variant="h6" noWrap>Sign In</Typography>
-                </div>
-                <div className="input-container">
-                    <TextField
-                        id="email"
-                        label="Email Address *"
-                        variant="outlined"
-                        type="email"
-                        value={fields.email.value}
-                        onChange={(e) => handleFieldChange('email', e.target.value)}
-                        error={!!fields.email.error}
-                        helperText={fields.email.error}
-                        className="text-field"
-                        autoComplete="email" // Added autocomplete attribute
-                    />
-                </div>
-                <div className="input-container">
-                    <TextField
-                        id="password"
-                        label="Password *"
-                        variant="outlined"
-                        type="password"
-                        value={fields.password.value}
-                        onChange={(e) => handleFieldChange('password', e.target.value)}
-                        error={!!fields.password.error}
-                        helperText={fields.password.error}
-                        className="text-field"
-                        autoComplete="current-password" // Added autocomplete attribute
-                    />
-                </div>
-                <div className="input-container">
-                    <Button
-                        className="sign-in-button"
-                        variant="contained"
-                        type="submit" // Set the button type to "submit"
-                        style={{ backgroundColor: '#3f51b5', color: '#ffffff' }}
-                    >
-                        Sign In
-                    </Button>
-                </div>
-                <div className="input-container">
-                    <Link to="/signup" className="signup-text">
-                        <Typography variant="body1" align="left">
-                            Don't have an account? Sign Up
-                        </Typography>
-                    </Link>
-                </div>
-            </form>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        </Box>
-    ) : (
-        
-        <Navigate to="/home" />
-    );
+    // Attempt to login
+    try {
+      const res = await login(loginData);
+      console.log("response::" + JSON.stringify(res));
+
+            // Parse the JSON response
+            const jsonResponse = await res.json();
+
+      // Save token and role in local storage
+      
+      if (res.ok) {
+        // Handle successful response
+        console.log("OK status for signin");
+        localStorage.setItem('token', jsonResponse.token);
+        console.log("roles::"+jsonResponse.roles);
+        localStorage.setItem('role', jsonResponse.roles);
+        successMsg("Login Successful !");
+        navigate('/products');
+    } else {
+        // Handle error response
+        console.log("Response is not OK");
+        console.log(jsonResponse.error);
+        errorMsg(jsonResponse.error);
+    }
+    } catch (e) {
+      // Show error message if login fails
+      errorMsg("Error occurred while logging in!");
+    }
+  };
+
+  // Function to handle changes in the input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+    setErrors({ ...errors, [name]: "" }); // Reset the error message when the user starts typing
+  };
+
+  return (
+    <Box>
+      <form className='registerForm'>
+        <span>
+          <LockOutlinedIcon
+            style={{
+              display: 'inline-block',
+              borderRadius: '60px',
+              padding: '0.6em 0.6em',
+              color: '#ffffff',
+              background: "#f50057"
+            }}
+          />
+        </span>
+        <h3 style={{ marginTop: '20px', textAlign: 'center', fontSize: '25px', fontWeight: 400 }}>Sign In</h3>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
+        <TextField
+          name='username'
+          type="email"
+          variant='outlined'
+          label='Email Address*'
+          onChange={handleChange}
+          error={!!errors.username}
+          helperText={errors.username}
+          fullWidth
+          margin="normal"
+        />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "20px"}}>
+        <TextField 
+          name='password'
+          type="password"
+          variant='outlined'
+          label='Password*'
+          onChange={handleChange}
+          error={!!errors.password}
+          helperText={errors.password}
+          fullWidth
+          margin="normal"
+        />
+        </div>
+        <button className='loginBtn' type='button' onClick={signIn}>SIGN IN</button>
+        <div style={{ display: 'flex', justifyContent: 'left', marginTop: "10px" }}>
+          <NavLink to="/signup">
+            <Typography variant="body1">
+              Don't have an account? Sign Up
+            </Typography>
+          </NavLink>
+        </div>
+      </form>
+    </Box>
+  );
 };
 
 export default Login;
