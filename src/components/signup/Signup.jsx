@@ -4,6 +4,10 @@ import { successMsg, errorMsg } from '../broadcastMessages/BroadcastMessages';
 import { signup } from '../../common/services/apiService';
 import { TextField, Box, Typography } from '@mui/material';
 import { useNavigate, NavLink } from 'react-router-dom';
+import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button';
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -132,22 +136,33 @@ const Signup = () => {
   };
 
   return (
-    <Box>
-      <form className='registerForm'>
-        <span>
-          <LockOutlinedIcon
-            style={{
+    <Box sx={{flexGrow: 1}}>
+    <Grid container spacing={1}>
+      <Grid container item spacing={3}>
+        <Grid item xs={4}/>
+        <Grid item xs={4}>
+          <div style={{display: 'flex', justifyContent: 'center', marginTop: "10%"}}>
+            <LockOutlinedIcon style={{
               display: 'inline-block',
               borderRadius: '60px',
               padding: '0.6em 0.6em',
               color: '#ffffff',
               background: "#f50057"
-            }}
-          />
-        </span>
-        <Typography variant="h5" sx={{ marginTop: '20px', textAlign: 'center', fontWeight: 400 }}>
-          Sign Up
-        </Typography>
+            }}/>
+          </div>
+          <div style={{display: 'flex', justifyContent: 'center'}}>
+            <Typography
+              variant="subtitle1"
+              noWrap
+              sx={{
+                fontSize: "25px",
+                color: 'inherit',
+              }}
+            >
+              Sign up
+            </Typography>
+          </div>
+          <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           name='firstName'
           label="First Name*"
@@ -157,6 +172,8 @@ const Signup = () => {
           helperText={errors.firstName}
           fullWidth
         />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           type="text"
           name='lastName'
@@ -167,6 +184,8 @@ const Signup = () => {
           helperText={errors.lastName}
           fullWidth
         />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           type="email"
           name='email'
@@ -177,6 +196,8 @@ const Signup = () => {
           helperText={errors.email}
           fullWidth
         />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           type="password"
           name='password'
@@ -187,6 +208,8 @@ const Signup = () => {
           helperText={errors.password}
           fullWidth
         />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           type="password"
           name='confirmPassword'
@@ -197,6 +220,8 @@ const Signup = () => {
           helperText={errors.confirmPassword}
           fullWidth
         />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           type="text"
           name='contactNumber'
@@ -207,17 +232,35 @@ const Signup = () => {
           helperText={errors.contactNumber}
           fullWidth
         />
-        <button type='button' onClick={signUp} className='loginBtn'>SIGN UP</button>
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
+								<Button variant="contained"
+										color="primary"
+										fullWidth
+										onClick={signUp}
+                    style ={{backgroundColor: '#3f51b5'}}
+								>
+									SIGN UP
+								</Button>
+							</div>
         <div style={{ display: 'flex', justifyContent: 'right', marginTop: "30px" }}>
           <NavLink to="/login">
             <Typography variant="body1">
               Already have an account? Sign in
             </Typography>
           </NavLink>
-        </div>
-      </form>
-    </Box>
-  );
+          </div>
+          </Grid>
+						<Grid item xs={4}/>
+					</Grid>
+				</Grid>
+				<Backdrop
+					sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+				>
+					<CircularProgress color="inherit"/>
+				</Backdrop>
+			</Box>
+		);
 };
 
 

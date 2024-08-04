@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { get_login, userData } from '../../common/services/apiService';
+import { get_login, userData, getProductForGivenID } from '../../common/services/apiService';
 import Chip from '@mui/material/Chip';
 import './ProductDetails.css'
 import { errorMsg } from '../broadcastMessages/BroadcastMessages';
@@ -10,20 +10,36 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1)
   const [details, setDetails] = useState(null)
+  
+
   const getProductDetails = async () => {
-    await get_login('/products/' + id)
-      .then((res) => {
-        let a = res.data;
-        setDetails(a)
-      }).catch((e) => {
-        errorMsg('something  went wrong')
-      })
-  }
+    console.log("fetching products from endpoint");
+    try {
+        const { product, ok } = await getProductForGivenID(id);
+        
+        if (ok) {
+            // Handle successful response
+            console.log("OK status for getProductData");
+            console.log("Product details fetched successfully for EDIT");
+            console.log("Products response:", product);
+            
+            // Update state with the fetched product details
+            setDetails(product);
+        } else {
+            // Handle error response
+            console.log("Response is not OK");
+            errorMsg("Error occurred while loading the product details!");
+        }
+    } catch (e) {
+        // Show error message if fetching product details fails
+        errorMsg("Error occurred while loading the product details!");
+    }
+};
   const placeOrder = () => {
     if (quantity && quantity > 0) {
       navigate('/addaddress/' + id + '/' + quantity)
     } else {
-      errorMsg('select Quantity')
+      errorMsg('Please select quantity')
     }
   }
   useEffect(() => {

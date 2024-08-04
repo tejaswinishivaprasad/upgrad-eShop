@@ -4,7 +4,11 @@ import { successMsg, errorMsg } from '../broadcastMessages/BroadcastMessages';
 import { login } from '../../common/services/apiService';
 import { TextField, Box, Typography } from '@mui/material';
 import { useNavigate, NavLink } from 'react-router-dom';
-
+import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button';
+import {Link} from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
 const Login = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
@@ -42,41 +46,31 @@ const Login = () => {
     return !newErrors.username && !newErrors.password;
   };
 
-  // Function to handle sign-in logic
   const signIn = async () => {
     if (!validateFields()) {
-      return;
+        return;
     }
 
     // Attempt to login
     try {
-      const res = await login(loginData);
-      console.log("response::" + JSON.stringify(res));
+        const { response, jsonResponse } = await login(loginData);
 
-            // Parse the JSON response
-            const jsonResponse = await res.json();
-
-      // Save token and role in local storage
-      
-      if (res.ok) {
-        // Handle successful response
-        console.log("OK status for signin");
-        localStorage.setItem('token', jsonResponse.token);
-        console.log("roles::"+jsonResponse.roles);
-        localStorage.setItem('role', jsonResponse.roles);
-        successMsg("Login Successful !");
-        navigate('/products');
-    } else {
-        // Handle error response
-        console.log("Response is not OK");
-        console.log(jsonResponse.error);
-        errorMsg(jsonResponse.error);
-    }
+        if (response.ok) {
+            // Handle successful response
+            console.log("OK status for signin");
+            successMsg("Login Successful !");
+            navigate('/products');
+        } else {
+            // Handle error response
+            console.log("Response is not OK");
+            errorMsg(jsonResponse.error);
+        }
     } catch (e) {
-      // Show error message if login fails
-      errorMsg("Error occurred while logging in!");
+        // Show error message if login fails
+        errorMsg("Error occurred while logging in!");
     }
-  };
+};
+
 
   // Function to handle changes in the input fields
   const handleChange = (e) => {
@@ -86,21 +80,35 @@ const Login = () => {
   };
 
   return (
-    <Box>
-      <form className='registerForm'>
-        <span>
+    <Box sx={{flexGrow: 1}}>
+				<Grid container spacing={1}>
+					<Grid container item spacing={3}>
+						<Grid item xs={4}/>
+						<Grid item xs={4}>
+							<div style={{display: 'flex', justifyContent: 'center', marginTop: "10%"}}>
           <LockOutlinedIcon
             style={{
               display: 'inline-block',
               borderRadius: '60px',
               padding: '0.6em 0.6em',
               color: '#ffffff',
-              background: "#f50057"
+              background: "#f50057",
             }}
           />
-        </span>
-        <h3 style={{ marginTop: '20px', textAlign: 'center', fontSize: '25px', fontWeight: 400 }}>Sign In</h3>
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
+       </div>
+       <div style={{display: 'flex', justifyContent: 'center'}}>
+       <Typography
+									variant="subtitle1"
+									noWrap
+									sx={{
+										fontSize: "25px",
+										color: 'inherit',
+									}}
+								>
+									Sign in
+								</Typography>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField
           name='username'
           type="email"
@@ -110,10 +118,9 @@ const Login = () => {
           error={!!errors.username}
           helperText={errors.username}
           fullWidth
-          margin="normal"
         />
         </div>
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: "20px"}}>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
         <TextField 
           name='password'
           type="password"
@@ -123,20 +130,35 @@ const Login = () => {
           error={!!errors.password}
           helperText={errors.password}
           fullWidth
-          margin="normal"
         />
         </div>
-        <button className='loginBtn' type='button' onClick={signIn}>SIGN IN</button>
-        <div style={{ display: 'flex', justifyContent: 'left', marginTop: "10px" }}>
-          <NavLink to="/signup">
-            <Typography variant="body1">
-              Don't have an account? Sign Up
-            </Typography>
-          </NavLink>
-        </div>
-      </form>
-    </Box>
-  );
-};
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: "30px"}}>
+								<Button variant="contained"
+										color="primary"
+										fullWidth
+										onClick={signIn} style ={{backgroundColor: '#3f51b5'}}
+								>
+									SIGN IN
+								</Button>
+							</div>
+              <div style={{display: 'flex', justifyContent: 'left', marginTop: "15px"}}>
+								<Link to="/signup">
+									<Typography variant="body1">
+										Don't have an account? Sign Up
+									</Typography>
+								</Link>
+							</div>
+						</Grid>
+						<Grid item xs={4}/>
+					</Grid>
+				</Grid>
+				<Backdrop
+					sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+				>
+					<CircularProgress color="inherit"/>
+				</Backdrop>
+			</Box>
+      );
+    };
 
 export default Login;

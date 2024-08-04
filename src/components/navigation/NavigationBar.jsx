@@ -39,8 +39,9 @@ const NavigationBar = () => {
   useEffect(() => {
       if (userData()) {
       setIslogin(true);
-      console.log(userData().token);
-      console.log(userData().role);
+      console.log("inside useeffect of navigation");
+      console.log(userData()?.token);
+      console.log(userData()?.roles);
 
     }else{
       setIslogin(false);
@@ -74,7 +75,7 @@ const NavigationBar = () => {
             {islogin &&
               <>
                 <NavLink to='products' style={{ textDecorationLine:'underline',margin: 'auto 10px' }} >Home</NavLink>
-               {userData()?.role==='ADMIN' && <NavLink to='addproduct' style={{ textDecorationLine:'underline',margin: 'auto 10px' }} >Add Product</NavLink>}
+               {userData()?.roles==='ADMIN' && <NavLink to='addproduct' style={{ textDecorationLine:'underline',margin: 'auto 10px' }} >Add Product</NavLink>}
                 <Button className='logout' variant='container' color='secondary'onClick={logout}>Logout</Button>
               </>
             }

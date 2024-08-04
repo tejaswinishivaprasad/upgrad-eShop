@@ -7,19 +7,33 @@ let headers = { 'Content-Type': 'application/json' };
 const baseUrl = 'http://localhost:8080/api';
 
 const login = async (data) => {
-    try{
-    const response = await fetch(baseUrl+"/auth/signin", {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data),
-    });
-    return response;
-} catch (error) {
-    // Handle and log errors (e.g., network issues or response parsing issues)
-    console.error("Sign in error:", error);
-    throw error; // Re-throw the error so it can be handled by the calling code
-}
+    try {
+        const response = await fetch(baseUrl + "/auth/signin", {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data),
+        });
+
+        const jsonResponse = await response.json();
+
+        if (response.ok) {
+            // Handle successful response and store token and role in local storage
+            localStorage.setItem('token', jsonResponse.token);
+            localStorage.setItem('roles', jsonResponse.roles);
+        } else {
+            // Handle error response (no local storage update)
+            console.error("Sign in error:", jsonResponse.error);
+        }
+
+        // Return the response (with or without local storage update)
+        return { response, jsonResponse };
+    } catch (error) {
+        // Handle and log errors (e.g., network issues or response parsing issues)
+        console.error("Sign in error:", error);
+        throw error; // Re-throw the error so it can be handled by the calling code
+    }
 };
+
 
 const signup = async (data) => {
     console.log("signup json::" + JSON.stringify(data));
@@ -64,6 +78,48 @@ const getProducts = async () => {
     }
 };
 
+const getProductForGivenID = async (id) => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + userData().token,
+    };
+    try {
+        console.log("id::" + id);
+        const response = await fetch(baseUrl + "/products/" + id, {
+            method: 'GET',
+            headers: headers,
+        });      
+        // Parse the JSON response
+        const product = await response.json();
+        console.log("Returning product object here:", product);
+        return { product, ok: response.ok };
+    } catch (error) {
+        console.error("Error occurred while fetching product details:", error);
+        throw error; // Re-throw the error to be handled by the calling code
+    }
+};
+
+
+const updateProductDetails = async (id,data) => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + userData().token,
+    };
+    try {
+        console.log("id::" + id);
+        const response = await fetch(baseUrl + "/products/" + id, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(data),
+        });      
+        // Parse the JSON response
+        
+        return response;
+    } catch (error) {
+        console.error("Error occurred while updating product details:", error);
+        throw error; // Re-throw the error to be handled by the calling code
+    }
+};
 
 const getCategories = async () => {
     const headers = { 
@@ -89,6 +145,35 @@ const getCategories = async () => {
         throw error; // Re-throw the error to be handled by the calling code
     }
 };
+
+
+const addProductToDb = async (data) => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + userData().token,
+    };
+    try {
+        const response = await fetch(baseUrl + "/products", {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(data),
+        });
+    
+        if (response.status === 201) {
+          // If status is 201 Created, return the response text
+          const responseText = await response.text();
+          return { success: true, data: responseText };
+        } else {
+          // For other status codes, throw an error
+          const errorText = await response.text();
+          return { success: false, error: errorText };
+        }
+      } catch (error) {
+        console.error('API request error:', error);
+        return { success: false, error: error.message };
+      }
+    };
+
 
 
 const get_data = async (endpoint, params) => {
@@ -146,6 +231,27 @@ const delete_login = async (endpoint) => {
     return response.json();
 };
 
+const deleteProduct = async (id) => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + userData().token,
+    };
+    try {
+        console.log("id::" + id);
+        const response = await fetch(baseUrl + "/products/" + id, {
+            method: 'DELETE',
+            headers: headers,
+        });      
+        // Parse the JSON response
+        
+        return response;
+    } catch (error) {
+        console.error("Error occurred while deleting product details:", error);
+        throw error; // Re-throw the error to be handled by the calling code
+    }
+};
+
+
 const get_login =async (endpoint) => {
     var hdrs = { 
         'Content-Type': 'application/json',
@@ -174,7 +280,7 @@ const userData = () => {
         console.log("token inside userdata::"+localStorage.getItem('token'));
         return {
             token: localStorage.getItem('token'),
-            role: localStorage.getItem('roles'),
+            roles: localStorage.getItem('roles'),
             
         };
     } else {
@@ -182,4 +288,4 @@ const userData = () => {
     }
 };
 
-export { userData, login, signup, get_data, getProducts, getCategories,get_login,post_login, put_login, delete_login };
+export { userData, login, signup, get_data, getProducts, getCategories,addProductToDb,get_login,getProductForGivenID,updateProductDetails,deleteProduct,post_login, put_login, delete_login };
