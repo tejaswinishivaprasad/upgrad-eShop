@@ -18,8 +18,10 @@ const login = async (data) => {
 
         if (response.ok) {
             // Handle successful response and store token and role in local storage
+            console.log("userID within localstorage before adding::"+jsonResponse.userId);
             localStorage.setItem('token', jsonResponse.token);
             localStorage.setItem('roles', jsonResponse.roles);
+            localStorage.setItem('userId',jsonResponse.userId);
         } else {
             // Handle error response (no local storage update)
             console.error("Sign in error:", jsonResponse.error);
@@ -74,6 +76,31 @@ const getProducts = async () => {
         return await response.json();
     } catch (error) {
         console.error("Error occurred while fetching product details:", error);
+        throw error; // Re-throw the error to be handled by the calling code
+    }
+};
+
+const getAddresses = async () => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + userData().token,
+    };
+    try {
+        const response = await fetch(baseUrl + "/addresses", {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            // Handle HTTP errors
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error fetching address details');
+        }
+
+        // Return the JSON response
+        return await response.json();
+    } catch (error) {
+        console.error("Error occurred while fetching address details:", error);
         throw error; // Re-throw the error to be handled by the calling code
     }
 };
@@ -175,6 +202,64 @@ const addProductToDb = async (data) => {
     };
 
 
+    const addAddressToDb = async (data) => {
+        const headers = { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + userData().token,
+        };
+        try {
+            console.log("address JSON::"+JSON.stringify(data));
+            const response = await fetch(baseUrl + "/addresses", {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify(data),
+            });
+        
+            if (response.status === 201) {
+              // If status is 201 Created, return the response text
+              const responseText = await response.text();
+              return { success: true, data: responseText };
+            } else {
+              // For other status codes, throw an error
+              const errorText = await response.text();
+              return { success: false, error: errorText };
+            }
+          } catch (error) {
+            console.error('Could not add address to DB:', error);
+            return { success: false, error: error.message };
+          }
+        };
+    
+        const createOrder = async (json) => {
+            console.log("orders json ::"+JSON.stringify(json));
+            const headers = { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userData().token,
+            };
+            try {
+                
+                const response = await fetch(baseUrl + "/orders", {
+                  method: 'POST',
+                  headers: headers,
+                  body: JSON.stringify(json),
+                });
+            
+                if (response.status === 201) {
+                  // If status is 201 Created, return the response text
+                  const responseText = await response.text();
+                  return { success: true, data: responseText };
+                } else {
+                  // For other status codes, throw an error
+                  const errorText = await response.text();
+                  return { success: false, error: errorText };
+                }
+              } catch (error) {
+                console.error('Could not place order', error);
+                return { success: false, error: error.message };
+              }
+            };
+        
+
 
 const get_data = async (endpoint, params) => {
     let headers = { 
@@ -264,6 +349,11 @@ const response = await fetch(baseUrl + endpoint, {
 return response.json();
 };
 
+const getProductDetailToBuy = async (id) =>
+{
+
+};
+
 const login_post_data = async (endpoint, data) => {
     let credentials = btoa(data.username + ':' + data.password);
 
@@ -278,9 +368,11 @@ const userData = () => {
     if (localStorage.getItem('token')) {
         console.log("role inside userdata::"+localStorage.getItem('roles'));
         console.log("token inside userdata::"+localStorage.getItem('token'));
+        console.log("useriod within userdata::"+localStorage.getItem('userId'));
         return {
             token: localStorage.getItem('token'),
             roles: localStorage.getItem('roles'),
+            userId : localStorage.getItem('userId'),
             
         };
     } else {
@@ -288,4 +380,4 @@ const userData = () => {
     }
 };
 
-export { userData, login, signup, get_data, getProducts, getCategories,addProductToDb,get_login,getProductForGivenID,updateProductDetails,deleteProduct,post_login, put_login, delete_login };
+export { userData, login, signup, get_data,addAddressToDb, getProducts, getAddresses,getCategories,addProductToDb,get_login,createOrder,getProductForGivenID,updateProductDetails,deleteProduct,getProductDetailToBuy,post_login, put_login, delete_login };

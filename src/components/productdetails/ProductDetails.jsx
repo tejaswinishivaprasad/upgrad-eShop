@@ -35,7 +35,7 @@ const ProductDetails = () => {
         errorMsg("Error occurred while loading the product details!");
     }
 };
-  const placeOrder = () => {
+  const proceedToPlaceOrder = () => {
     if (quantity && quantity > 0) {
       navigate('/addaddress/' + id + '/' + quantity)
     } else {
@@ -64,7 +64,7 @@ const ProductDetails = () => {
           <p>{details.description}</p>
           <h3 style={{ color: 'red' }}>₹ {details.price}</h3>
           <TextField type="number" name='quantity' variant='outlined' value={quantity} label='Quantity' onChange={(e) => { setQuantity(e.target.value) }} /><br />
-          <Button style={{ marginTop: '10px', backgroundColor: "#3f51b5"}} size="medium" variant='contained' onClick={placeOrder}>PLACE ORDER</Button>
+          <Button style={{ marginTop: '10px', backgroundColor: "#3f51b5"}} size="medium" variant='contained' onClick={proceedToPlaceOrder}>PLACE ORDER</Button>
           
         </div>
       </div>}
