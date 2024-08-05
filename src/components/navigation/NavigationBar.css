@@ -43,3 +43,56 @@
     cursor: pointer;
 
 }
+/* Styles for the search bar and related components */
+.search {
+    position: relative;
+    border-radius: 4px; /* Adjust the border radius to your theme's shape.borderRadius */
+    background-color: rgba(255, 255, 255, 0.15);
+    margin-right: 16px; /* Adjust the margin as per theme.spacing(2) */
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .search:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  @media (min-width: 600px) {
+    .search {
+      margin-left: 24px; /* Adjust the margin as per theme.spacing(3) */
+      width: auto;
+    }
+  }
+  
+  .searchIconWrapper {
+    padding: 0 16px; /* Adjust the padding as per theme.spacing(0, 2) */
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .styledInputBase {
+    color: white;
+  }
+  
+  .styledInputBase .MuiInputBase-input {
+    padding: 8px 8px 8px 0; /* Adjust the padding as per theme.spacing(1, 1, 1, 0) */
+    padding-left: calc(1em + 32px); /* Adjust the padding-left as per calc(1em + theme.spacing(4)) */
+    transition: width 200ms; /* Adjust the transition as per theme.transitions.create('width') */
+    width: 100%;
+   color:white;
+  }
+  .styledInputBase .MuiInputBase-input::placeholder {
+    color: rgba(255, 255, 255, 0.5); /* Lighter white color for the placeholder */
+  }
+  
+  
+  @media (min-width: 960px) {
+    .styledInputBase .MuiInputBase-input {
+      width: 40ch; /* Adjust the width for larger screens */
+    }
+  }
+  

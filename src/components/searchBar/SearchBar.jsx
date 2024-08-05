@@ -1,63 +1,32 @@
-//Fancy text box for searching products by name after user has logged in
-
+import { useState } from 'react';
+import { InputBase, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import {useState} from "react";
-import {alpha, FormControl, InputAdornment, OutlinedInput} from "@mui/material";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 const SearchBar = () => {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
-	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const [searchFor, setSearchFor] = useState(searchParams.get("searchFor") || "");
+  const handleSearch = () => {
+    if (query.trim() !== '') {
+      navigate(`/products?searchFor=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
-	let changeVal = (val) => {
-		setSearchFor(val);
-	}
-
-	let blurVal = (val) => {
-		if(val !== null && val.length > 0) {
-			navigate("/home?searchFor=" + val);
-		} else {
-			navigate("/home");
-		}
-	}
-
-	return (
-		<FormControl variant="outlined" style={{width: "100%",marginLeft:"18%"}}>
-          
-			<OutlinedInput
-				id="search"
-				value={searchFor}
-				onChange={(event) => changeVal(event.target.value)}
-				onBlur={(event) => blurVal(event.target.value)}
-				onKeyDown={(event) => {
-					if (event.key === "Enter") {
-						blurVal(event.target.value);
-					}
-				}}
-				startAdornment={
-					<InputAdornment position="start">
-						<SearchIcon sx={{color: "#FFFFFF"}}/>
-					</InputAdornment>
-				}
-				aria-describedby="search"
-				placeholder={"Search..."}
-				inputProps={{
-					'aria-label': 'search',
-				}}
-				size="small"
-				sx={{
-					color: "#FFFFFF",
-					borderRadius: 2,
-					backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
-					'&:hover': {
-						backgroundColor: (theme) => alpha(theme.palette.common.white, 0.25),
-					},
-					width: "100%"
-				}}
-			/>
-		</FormControl>
-	);
+  return (
+	
+    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#fff', borderRadius: '4px' }}>
+      <InputBase
+        placeholder="Search…"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={{ marginLeft: '8px', flex: 1 }}
+      />
+      <IconButton type="button" onClick={handleSearch}>
+        <SearchIcon />
+      </IconButton>
+    </div>
+  );
 };
 
 export default SearchBar;
