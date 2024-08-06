@@ -175,6 +175,7 @@ const getCategories = async () => {
 
 
 const addProductToDb = async (data) => {
+    console.log("adding below to DB::"+JSON.stringify(data));
     const headers = { 
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + userData().token,

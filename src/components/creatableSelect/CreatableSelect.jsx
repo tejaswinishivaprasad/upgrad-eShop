@@ -1,11 +1,16 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import { useState } from "react";
+import { useState , useEffect} from "react";
 
 const CreatableSelect = ({ options, value, onChange, label, error, helperText }) => {
   const filter = createFilterOptions();
   const [selectedValue, setSelectedValue] = useState(value || null);
+
+  useEffect(() => {
+    // Sync internal state with the value prop
+    setSelectedValue(value);
+  }, [value]);
 
   return (
     <Autocomplete
