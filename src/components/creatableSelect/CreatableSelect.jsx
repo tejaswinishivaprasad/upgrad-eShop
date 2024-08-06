@@ -1,9 +1,21 @@
-import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import { useState , useEffect} from "react";
+/*
+Creatable Select is used to add a select box which can display the Product categories and 
+also allows the user to add a  new category of product while adding or modifying product 
+details.
+*/
 
-const CreatableSelect = ({ options, value, onChange, label, error, helperText }) => {
+import TextField from "@mui/material/TextField";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import { useState, useEffect } from "react";
+
+const CreatableSelect = ({
+  options,
+  value,
+  onChange,
+  label,
+  error,
+  helperText,
+}) => {
   const filter = createFilterOptions();
   const [selectedValue, setSelectedValue] = useState(value || null);
 
@@ -16,8 +28,12 @@ const CreatableSelect = ({ options, value, onChange, label, error, helperText })
     <Autocomplete
       value={selectedValue}
       onChange={(event, newValue) => {
-        if (newValue && typeof newValue === 'string' && newValue.startsWith('Add ')) {
-          newValue = newValue.replace(/^Add /, '');
+        if (
+          newValue &&
+          typeof newValue === "string" &&
+          newValue.startsWith("Add ")
+        ) {
+          newValue = newValue.replace(/^Add /, "");
         }
         setSelectedValue(newValue);
         onChange(newValue);
@@ -26,7 +42,7 @@ const CreatableSelect = ({ options, value, onChange, label, error, helperText })
         const filtered = filter(options, params);
         const { inputValue } = params;
 
-        if (inputValue !== '' && !options.includes(inputValue)) {
+        if (inputValue !== "" && !options.includes(inputValue)) {
           filtered.push(`Add ${inputValue}`);
         }
 
@@ -37,19 +53,21 @@ const CreatableSelect = ({ options, value, onChange, label, error, helperText })
       handleHomeEndKeys
       id="creatable-select"
       options={options}
-      getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+      getOptionLabel={(option) =>
+        typeof option === "string" ? option : option.label
+      }
       renderOption={(props, option) => <li {...props}>{option}</li>}
       freeSolo
       renderInput={(params) => (
-        <TextField 
-          {...params} 
-          label={label} 
-          error={error} 
+        <TextField
+          {...params}
+          label={label}
+          error={error}
           helperText={helperText}
-          sx={{ width: '100%' }} // Ensure full width
+          sx={{ width: "100%" }} 
         />
       )}
-      sx={{ width: '100%' }} // Ensure full width
+      sx={{ width: "100%" }}
     />
   );
 };

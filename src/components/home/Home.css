@@ -1,43 +1,38 @@
-/* .card-parent{
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap:20px;
-    padding: 30px;
+/* CSS class for the Home page where Products are displayed
 } */
 
-.card-parent>div> image{
-    height: 300px !important;
+.card-parent > div > image {
+  height: 300px !important;
 }
 
 .card-parent {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    justify-content: center;
-    padding: 30px;
-  }
-  
-  .card {
-    height: 400px;
-    width: 345px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .card-content {
-    height: 150px; /* Adjust as needed */
-  }
-  
-  .card-actions {
-    display: grid;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
-  .wrap_text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-content: center;
+  padding: 30px;
 }
-  
+
+.card {
+  height: 400px;
+  width: 345px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-content {
+  height: 150px; /* Adjust as needed */
+}
+
+.card-actions {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.wrap_text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

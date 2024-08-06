@@ -1,4 +1,8 @@
-// src/components/ConfirmationDialog.jsx
+/*
+This Component is add a confirmation box in the applicaiton.
+this can be re used by any other component if there is a need to 
+populate a confirmation dialog */
+
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 

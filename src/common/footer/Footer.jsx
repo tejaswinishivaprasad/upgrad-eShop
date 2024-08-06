@@ -1,4 +1,4 @@
-//Static footer visible on all pages on bottom
+/*Static footer visible on all pages on bottom*/
 
 import "./Footer.css";
 import Typography from '@mui/material/Typography';
