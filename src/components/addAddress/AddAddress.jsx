@@ -1,6 +1,7 @@
 /*
-AddAddress component delas with loading the page which takes in Address selection
-or provides the user an optoin to Add new Address into DB . It also uses Stepper to show the
+AddAddress component deals with Address selection
+or provides the user an option to Add new Address into DB which gets automatically refreshed and 
+updated into the select button . It also uses Stepper to show the
 progress of the user towards placing an order
 */
 import { useEffect, useState } from "react";

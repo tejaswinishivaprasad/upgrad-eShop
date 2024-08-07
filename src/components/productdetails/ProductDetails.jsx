@@ -16,6 +16,8 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [details, setDetails] = useState(null);
 
+  
+//API call tho fetch product detail based on the ID
   const getProductDetails = async () => {
     try {
       const { product, ok } = await getProductForGivenID(id);
@@ -31,6 +33,8 @@ const ProductDetails = () => {
       errorMsg("Error occurred while loading the product details!");
     }
   };
+
+  //fetch quantity and address selections from user to place order
   const proceedToPlaceOrder = () => {
     if (quantity && quantity > 0) {
       navigate("/addaddress/" + id + "/" + quantity);
@@ -38,6 +42,7 @@ const ProductDetails = () => {
       errorMsg("Please select quantity");
     }
   };
+  
   useEffect(() => {
     if (!userData()) {
       navigate("/login");

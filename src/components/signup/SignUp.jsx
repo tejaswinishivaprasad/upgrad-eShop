@@ -33,7 +33,7 @@ const Signup = () => {
     contactNumber: "",
   });
 
-   // Validation function
+   // Validation for registration page
    const validateFields = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
@@ -116,7 +116,7 @@ const Signup = () => {
     setErrors(newErrors);
     return !Object.values(newErrors).some((error) => error !== '');
   };
-  // Function to handle sign-up logic
+  // Function to handle sign-up api call
   const signUp = async () => {
     if (!validateFields()) {
       return;

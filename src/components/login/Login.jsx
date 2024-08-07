@@ -25,25 +25,26 @@ const Login = () => {
     password: "",
   });
 
+  //Validate login form fields
   const validateFields = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
     const newErrors = {
       username: "",
       password: "",
     };
 
-    if (!loginData.username.trim() || !loginData.password.trim())
-    {
+    if (!loginData.username.trim() || !loginData.password.trim()) {
       errorMsg("Please fill all the required fields!");
       return;
     }
-     if (!emailRegex.test(loginData.username)) {
+    if (!emailRegex.test(loginData.username)) {
       newErrors.username = "Invalid email address";
     }
 
-   if (!passwordRegex.test(loginData.password)) {
+    if (!passwordRegex.test(loginData.password)) {
       newErrors.password =
         "Password must be at least 6 characters long and should be a combination of alphanumeric and atleast one special character";
     }
@@ -53,6 +54,7 @@ const Login = () => {
     return !newErrors.username && !newErrors.password;
   };
 
+  //API call to login the user
   const signIn = async () => {
     if (!validateFields()) {
       return;

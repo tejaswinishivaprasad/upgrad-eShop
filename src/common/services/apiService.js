@@ -15,6 +15,24 @@ const userData = () => {
     return null;
   }
 };
+
+// Endpoint to sign up / register a new user
+const signup = async (data) => {
+  try {
+    const response = await fetch(baseUrl + "/auth/signup", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+    });
+    return response;
+  } catch (error) {
+    // Handle and log errors (e.g., network issues or response parsing issues)
+    console.error("Signup error:", error);
+    throw error; // Re-throw the error so it can be handled by the calling code
+  }
+};
+
+// Endpoint to sign in / login a user
 const login = async (data) => {
   try {
     userData();
@@ -44,21 +62,7 @@ const login = async (data) => {
   }
 };
 
-const signup = async (data) => {
-  try {
-    const response = await fetch(baseUrl + "/auth/signup", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(data),
-    });
-    return response;
-  } catch (error) {
-    // Handle and log errors (e.g., network issues or response parsing issues)
-    console.error("Signup error:", error);
-    throw error; // Re-throw the error so it can be handled by the calling code
-  }
-};
-
+// Endpoint to sfetch products from backend/Mongo DB
 const getProducts = async () => {
   const headers = {
     "Content-Type": "application/json",
@@ -82,29 +86,7 @@ const getProducts = async () => {
   }
 };
 
-const getAddresses = async () => {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + userData().token,
-  };
-  try {
-    const response = await fetch(baseUrl + "/addresses", {
-      method: "GET",
-      headers: headers,
-    });
-    if (!response.ok) {
-      // Handle HTTP errors
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error fetching address details");
-    }
-    // Return the JSON response
-    return await response.json();
-  } catch (error) {
-    console.error("Error occurred while fetching address details:", error);
-    throw error; // Re-throw the error to be handled by the calling code
-  }
-};
-
+// Endpoint to fetch product details based on the given id
 const getProductForGivenID = async (id) => {
   try {
     const headers = {
@@ -116,7 +98,6 @@ const getProductForGivenID = async (id) => {
       method: "GET",
       headers: headers,
     });
-    // Parse the JSON response
     const product = await response.json();
     return { product, ok: response.ok };
   } catch (error) {
@@ -124,49 +105,7 @@ const getProductForGivenID = async (id) => {
     throw error; // Re-throw the error to be handled by the calling code
   }
 };
-
-const updateProductDetails = async (id, data) => {
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + userData().token,
-    };
-    console.log("id::" + id);
-    const response = await fetch(baseUrl + "/products/" + id, {
-      method: "PUT",
-      headers: headers,
-      body: JSON.stringify(data),
-    });
-    return response;
-  } catch (error) {
-    console.error("Error occurred while updating product details:", error);
-    throw error; // Re-throw the error to be handled by the calling code
-  }
-};
-
-const getCategories = async () => {
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + userData().token,
-    };
-    const response = await fetch(baseUrl + "/products/categories", {
-      method: "GET",
-      headers: headers,
-    });
-    if (!response.ok) {
-      // Handle HTTP errors
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error fetching categories");
-    }
-    // Return the JSON response
-    return await response.json();
-  } catch (error) {
-    console.error("Error occurred while fetching product categories:", error);
-    throw error; // Re-throw the error to be handled by the calling code
-  }
-};
-
+// Endpoint to add a new product and its details into backend/Mongo DB
 const addProductToDb = async (data) => {
   console.log("adding below to DB::" + JSON.stringify(data));
   try {
@@ -195,6 +134,93 @@ const addProductToDb = async (data) => {
   }
 };
 
+// Endpoint to update/modify the updated product details into backend/Mongo DB
+const updateProductDetails = async (id, data) => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userData().token,
+    };
+    console.log("id::" + id);
+    const response = await fetch(baseUrl + "/products/" + id, {
+      method: "PUT",
+      headers: headers,
+      body: JSON.stringify(data),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error occurred while updating product details:", error);
+    throw error; // Re-throw the error to be handled by the calling code
+  }
+};
+
+// Endpoint to delete a product from thew product catalog or backend
+const deleteProduct = async (id) => {
+  try {
+    console.log("id::" + id);
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userData().token,
+    };
+    const response = await fetch(baseUrl + "/products/" + id, {
+      method: "DELETE",
+      headers: headers,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error occurred while deleting product details:", error);
+    throw error; // Re-throw the error to be handled by the calling code
+  }
+};
+
+// Endpoint to fetch stored product categories to update the ToggleGroup
+const getCategories = async () => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userData().token,
+    };
+    const response = await fetch(baseUrl + "/products/categories", {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      // Handle HTTP errors
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error fetching categories");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error occurred while fetching product categories:", error);
+    throw error; // Re-throw the error to be handled by the calling code
+  }
+};
+
+// Endpoint to fetch all the stored address from mongo db
+const getAddresses = async () => {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + userData().token,
+  };
+  try {
+    const response = await fetch(baseUrl + "/addresses", {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      // Handle HTTP errors
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error fetching address details");
+    }
+    // Return the JSON response
+    return await response.json();
+  } catch (error) {
+    console.error("Error occurred while fetching address details:", error);
+    throw error; // Re-throw the error to be handled by the calling code
+  }
+};
+
+// Endpoint to add a new address  into backend/Mongo DB
 const addAddressToDb = async (data) => {
   try {
     const headers = {
@@ -207,7 +233,6 @@ const addAddressToDb = async (data) => {
       headers: headers,
       body: JSON.stringify(data),
     });
-
     if (response.status === 201) {
       // If status is 201 Created, return the response text
       const responseText = await response.text();
@@ -218,14 +243,11 @@ const addAddressToDb = async (data) => {
       return { success: false, error: errorText };
     }
   } catch (error) {
-    console.error(
-      "Error occurred while adding address details into DB:",
-      error
-    );
     return { success: false, error: error.message };
   }
 };
 
+// Endpoint to create an order which stores the order details into backend
 const createOrder = async (json) => {
   console.log("orders json ::" + JSON.stringify(json));
   try {
@@ -251,24 +273,6 @@ const createOrder = async (json) => {
   } catch (error) {
     console.error("Error occurred while placing an order", error);
     return { success: false, error: error.message };
-  }
-};
-
-const deleteProduct = async (id) => {
-  try {
-    console.log("id::" + id);
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + userData().token,
-    };
-    const response = await fetch(baseUrl + "/products/" + id, {
-      method: "DELETE",
-      headers: headers,
-    });
-    return response;
-  } catch (error) {
-    console.error("Error occurred while deleting product details:", error);
-    throw error; // Re-throw the error to be handled by the calling code
   }
 };
 

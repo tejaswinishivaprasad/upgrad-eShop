@@ -1,6 +1,6 @@
 /*
-ProductForm component provides UI structure, validation to add new product and api calls to backend to fetch the product information
- required to Edit and save the product back
+ProductForm component provides UI form with validation to add new product details and api calls to backend to fetch the product information
+ required to Edit and save the product into MONGO
 */
 import React, { useEffect, useState } from "react";
 import { successMsg, errorMsg } from "../broadcastMessages/BroadcastMessages";
@@ -64,6 +64,7 @@ const ProductForm = ({ mode }) => {
     }
   };
 
+  //Get product details for the selected product using its ID
   const getProductData = async () => {
     try {
       const { product, ok } = await getProductForGivenID(id);
@@ -77,6 +78,7 @@ const ProductForm = ({ mode }) => {
     }
   };
 
+  // Load the categories and product data to deal with ADD/Edit
   useEffect(() => {
     getCategoriesList();
     if (mode === "edit") {
@@ -84,6 +86,7 @@ const ProductForm = ({ mode }) => {
     }
   }, [id, mode]);
 
+  //If user is not logged in , do not allow them into further pages , redirect to login
   useEffect(() => {
     if (!userData()) {
       navigate("/login");
@@ -99,30 +102,31 @@ const ProductForm = ({ mode }) => {
     setData({ ...data, category: newValue });
   };
 
+  //Validate Edit or Add product form
   const validate = () => {
     let errors = {};
     let hasEmptyFields = false;
     let isValid = true;
-  
+
     // Required fields check
     const requiredFields = [
-      'name',
-      'category',
-      'price',
-      'description',
-      'manufacturer',
-      'availableItems',
-      'imageUrl'
+      "name",
+      "category",
+      "price",
+      "description",
+      "manufacturer",
+      "availableItems",
+      "imageUrl",
     ];
-  
+
     requiredFields.forEach((field) => {
       const value = data[field];
-  
-      if (!value || (typeof value === 'string' && !value.trim())) {
+
+      if (!value || (typeof value === "string" && !value.trim())) {
         hasEmptyFields = true;
       }
     });
-  
+
     // If there are empty fields, show a collective error message
     if (hasEmptyFields) {
       errorMsg("Please fill all the required fields");
@@ -138,11 +142,12 @@ const ProductForm = ({ mode }) => {
         isValid = false;
       }
     }
-  
+
     setErrors(errors);
     return isValid;
   };
 
+  //On saving the prodtc , call API to update or create product into DB
   const handleSave = async () => {
     if (validate()) {
       setLoading(true);
