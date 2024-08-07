@@ -10,6 +10,9 @@ https://github.com/tejaswinishivaprasad/upgrad-eShop/blob/8b54bdd955c0f7c07d7484
 
 src/assets/images_screen/Project_screenshot.pdf
 
+The screen recording video of how the application works is pasted in the below Google drive location
+https://drive.google.com/file/d/1Jk2CCt9frvbvWXr-JeUgG50zC6vNIXwe/view?usp=sharing
+
 
 # upGrad-eShop Application 
 Overview
